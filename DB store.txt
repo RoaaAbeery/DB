@@ -1,0 +1,73 @@
+create database store;
+
+
+create table countries(
+    code int primary key ,
+    name varchar(20) unique ,
+    continent_name varchar(20) not null
+);
+create table users(
+    id int primary key ,
+    full_name varchar(20),
+    email varchar(20) unique ,
+    gender char(1) check ( gender='m' or gender='f' ) ,
+    date_of_birth varchar(15),
+    created_at datetime,
+    country_code int ,
+   foreign key (country_code)  references countries(code)
+);
+create table orders(
+    id int primary key ,
+    user_id int,
+    foreign key (user_id) references users (id),
+    status varchar(6) check ( status='start' or status='finish' ) ,
+    created_at datetime
+
+);
+
+create table order_products(
+order_id int ,
+foreign key (order_id) references orders(id),
+product_id int ,
+ foreign key (product_id) references products(id),
+ quantity int default 0
+);
+create table products
+(
+    id int primary key,
+    name varchar(10) not null,
+    price int default 0,
+    status varchar(10) check ( status = 'valid' or status = 'expired' ),
+    created_at datetime
+);
+#DML
+insert into countries value (1,'jeddah','Asia');
+insert into countries value (2,'United States','North');
+insert into countries value (3,'Russia','Asis');
+#Update row from countries table.
+update countries set name ='KSA' where code='1';
+select *from countries;
+
+insert into users value (1,'Roaa Ali','roaa@gmail.com','f','2000-10-18','2023-11-29 15:30:00',1);
+insert into users value (2,'amal Ali','amal@gmail.com','f','2000-10-18','2023-10-22 15:30:00',2);
+insert into users value (3,'ali','ali@gmail.com','m','2000-10-18','2022-12-22 15:30:00',3);
+select *from users;
+
+insert into orders value (1,1,'start','2023-11-29 15:30:00');
+insert into orders value (2,2,'start','2023-10-22 15:30:00');
+insert into orders value (3,3,'start','2022-12-22 15:30:00');
+select *from orders ;
+
+insert into products value (1,'Tshirt',45,'valid','2023-11-29 15:30:00');
+insert into products value (2,'Tshirt',70,'expired','2020-02-4 15:30:00');
+insert into products value (3,'Tshirt',48,'expired','2019-12-18 15:30:00');
+insert into products value (4,'Tshirt',40,'expired','2019-12-18 15:30:00');
+select *from products;
+
+insert into order_products value (1,1,5);
+insert into order_products value (3,3,11);
+insert into order_products value (2,2,10);
+select *from order_products;
+#Delete row from products table.
+delete from products where id=4;
+select *from products;
